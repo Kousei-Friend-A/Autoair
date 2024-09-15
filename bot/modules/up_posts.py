@@ -13,7 +13,7 @@ async def upcoming_animes():
             async with ClientSession() as ses:
                 res = await ses.get("https://subsplease.org/api/?f=schedule&h=true&tz=Asia/Kolkata")
                 aniContent = jloads(await res.text())["schedule"]
-            text = "<b>📆 Today's Anime Releases Schedule [IST]</b>\n\n"
+            text = "<b>📆 Today's Anime Releases Schedule</b>\n\n"
             for i in aniContent:
                 aname = TextEditor(i["title"])
                 await aname.load_anilist()
