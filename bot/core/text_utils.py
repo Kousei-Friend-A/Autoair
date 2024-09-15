@@ -201,22 +201,7 @@ class TextEditor:
         anime_season = str(ani_s[-1]) if (ani_s := self.pdata.get('anime_season', '01')) and isinstance(ani_s, list) else str(ani_s)
         if anime_name and self.pdata.get("episode_number"):
             titles = self.adata.get('title', {})
-            anime_season = str(ani_s[-1]) if (ani_s := self.pdata.get('anime_season', '01')) and isinstance(ani_s, list) else str(ani_s)
-
-        # Generate episode part with proper formatting
-            episode_number = str(self.pdata.get('episode_number', ''))
-            episode_part = f"E{episode_number}" if episode_number else ""
-
-        # Construct filename with hyphen between season and episode if needed
-            filename = f"""[S{anime_season}-{episode_part}] {titles.get('english') or titles.get('romaji') or titles.get('native')} {'['+qual+'p]' if qual else ''} {'['+codec.upper()+'] ' if codec else ''}{'['+lang+']'} {Var.BRAND_UNAME}.mkv"""
-
-        # Replace underscores with spaces
-            filename = filename.replace('_', ' ')
-
-        # Ensure the correct format for season-episode
-            filename = filename.replace(f"[S{anime_season}-E", f"[S{anime_season}-E")
-
-            return filename
+            return f"""[S{anime_season}-{'E'+str(self.pdata.get('episode_number')) if self.pdata.get('episode_number') else ''}] {titles.get('english') or titles.get('romaji') or titles.get('native')} {'['+qual+'p]' if qual else ''} {'['+codec.upper()+'] ' if codec else ''}{'['+lang+']'} {Var.BRAND_UNAME}.mkv"""
 
     @handle_logs
     async def get_caption(self):
