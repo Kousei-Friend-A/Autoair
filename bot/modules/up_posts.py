@@ -32,17 +32,25 @@ async def update_shdr(name, link):
     global TD_SCHR
     if TD_SCHR is not None:
         try:
-            # Split the text of the pinned message into lines
-            TD_lines = TD_SCHR.text.split('\n')
+            # Retrieve the current text from the pinned message
+            TD_lines = await TD_SCHR.text.split('\n')
+
+            # Flag to check if the anime name was found
+            found = False
 
             # Find the line that starts with the anime name and update the status
             for i, line in enumerate(TD_lines):
                 if line.startswith(f"📌 {name}"):
+                    found = True
                     if i + 2 < len(TD_lines):
                         TD_lines[i + 2] = f"    • **Status :** ✅ __Uploaded__\n    • **Link :** {link}"
                     else:
                         # Handle case where there are not enough lines
                         TD_lines.append(f"    • **Status :** ✅ __Uploaded__\n    • **Link :** {link}")
+                    break
+
+            if not found:
+                await rep.report(f"Anime '{name}' not found in the schedule.", "warning")
 
             # Join the updated lines and edit the pinned message
             updated_text = "\n".join(TD_lines)
@@ -52,4 +60,3 @@ async def update_shdr(name, link):
             await rep.report(f"Error updating status: {str(e)}", "error")
     else:
         await rep.report("TD_SCHR is not initialized.", "error")
-
